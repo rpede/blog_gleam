@@ -1,4 +1,5 @@
 import app/comments/data.{type Comment}
+import app/res
 import gleam/int
 import gleam/json
 import gleam/option
@@ -7,7 +8,8 @@ import wisp.{type Request}
 
 pub fn list_comments(_: Request) {
   let comments = data.list_comments()
-  json.array(comments, fn(a) { to_json(a) })
+  json.array(comments, to_json(_))
+  |> res.ok
 }
 
 pub fn get_article(_: Request, id: String) {
@@ -17,6 +19,7 @@ pub fn get_article(_: Request, id: String) {
     Ok(to_json(article))
   }
   option.from_result(result)
+  |> res.maybe
 }
 
 fn to_json(comment: Comment) {

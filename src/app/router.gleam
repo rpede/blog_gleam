@@ -10,10 +10,10 @@ pub fn handle_request(req: Request) -> Response {
 
   case wisp.path_segments(req) {
     [] -> index(req)
-    ["articles"] -> article.list_articles(req) |> res.ok
-    ["articles", id] -> article.get_article(req, id) |> res.maybe
-    ["comments"] -> comment.list_comments(req) |> res.ok
-    ["comments", id] -> comment.get_article(req, id) |> res.maybe
+    ["articles"] -> article.list_articles(req)
+    ["articles", id] -> article.get_article(req, id)
+    ["comments"] -> comment.list_comments(req)
+    ["comments", id] -> comment.get_article(req, id)
     _ -> res.not_found()
   }
 }
