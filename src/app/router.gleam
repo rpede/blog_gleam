@@ -1,4 +1,5 @@
-import app/articles/handlers as articles
+import app/articles/handlers as article
+import app/comments/handlers as comment
 import app/res
 import app/web
 import gleam/json
@@ -9,8 +10,10 @@ pub fn handle_request(req: Request) -> Response {
 
   case wisp.path_segments(req) {
     [] -> index(req)
-    ["articles"] -> articles.list_articles(req) |> res.ok
-    ["articles", id] -> articles.get_article(req, id) |> res.maybe
+    ["articles"] -> article.list_articles(req) |> res.ok
+    ["articles", id] -> article.get_article(req, id) |> res.maybe
+    ["comments"] -> comment.list_comments(req) |> res.ok
+    ["comments", id] -> comment.get_article(req, id) |> res.maybe
     _ -> res.not_found()
   }
 }
@@ -19,7 +22,13 @@ fn index(_: Request) -> Response {
   let object =
     json.object([
       #("title", json.string("Gleam Blog")),
-      #("endpoints", json.array(["/articles", "/articles/:id"], json.string)),
+      #(
+        "endpoints",
+        json.array(
+          ["/articles", "/articles/:id", "/comments", "/comments/:id"],
+          json.string,
+        ),
+      ),
     ])
   res.ok(object)
 }

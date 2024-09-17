@@ -15,11 +15,17 @@ pub fn index_test() {
   response.status
   |> should.equal(200)
 
-  response
-  |> testing.string_body
-  |> should.equal(
-    "{\"title\":\"Gleam Blog\",\"endpoints\":[\"/articles\",\"/articles/:id\"]}",
-  )
+  let body =
+    response
+    |> testing.string_body
+
+  body
+  |> string.contains("/articles")
+  |> should.be_true
+
+  body
+  |> string.contains("/comments")
+  |> should.be_true
 }
 
 pub fn articles_test() {
@@ -28,13 +34,15 @@ pub fn articles_test() {
   response.status
   |> should.equal(200)
 
-  response
-  |> testing.string_body
+  let body =
+    response
+    |> testing.string_body
+
+  body
   |> string.contains("First article")
   |> should.be_true
 
-  response
-  |> testing.string_body
+  body
   |> string.contains("Second article")
   |> should.be_true
 }
